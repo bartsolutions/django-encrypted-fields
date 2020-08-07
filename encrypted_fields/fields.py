@@ -167,6 +167,7 @@ class EncryptedFieldMixin(object):
 
         try:
             value = force_text(self.crypter().decrypt(value))
+            value = value.encode('utf-8').decode('unicode_escape')
         except keyczar.errors.KeyczarError:
             pass
         except UnicodeEncodeError:
@@ -183,6 +184,7 @@ class EncryptedFieldMixin(object):
             return value
 
         value = force_text(value)
+        value = value.encode('utf-8').decode('unicode_escape')
 
         return self.prefix + self.crypter().encrypt(value)
 

@@ -182,7 +182,6 @@ class EncryptedFieldMixin(object):
         except (SyntaxError, ValueError):
             pass
 
-        print("value", value)
         return super(EncryptedFieldMixin, self).to_python(value)
 
     def get_prep_value(self, value):

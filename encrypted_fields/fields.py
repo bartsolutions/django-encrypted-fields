@@ -168,7 +168,6 @@ class EncryptedFieldMixin(object):
 
         try:
             value = force_text(self.crypter().decrypt(value))
-            # value = value.encode('utf-8').decode('unicode_escape')
         except keyczar.errors.KeyczarError:
             pass
         except UnicodeEncodeError:
@@ -177,12 +176,13 @@ class EncryptedFieldMixin(object):
             pass
 
         try:
-            value = ast.literal_eval("'''%s'''" % value)
-        except SyntaxError:
-            value = ast.literal_eval('"""%s"""' % value)
-        except ValueError:
+            eval_val = "''' %s '''" % value.replace("'''", "\\'\\'\\'")
+            value = ast.literal_eval(eval_val)
+            value = value[1:-1]
+        except (SyntaxError, ValueError):
             pass
 
+        print("value", value)
         return super(EncryptedFieldMixin, self).to_python(value)
 
     def get_prep_value(self, value):
@@ -192,8 +192,6 @@ class EncryptedFieldMixin(object):
             return value
 
         value = force_text(value)
-        # value = value.encode('utf-8').decode('unicode_escape')
-
         return self.prefix + self.crypter().encrypt(value)
 
     def get_db_prep_value(self, value, connection, prepared=False):

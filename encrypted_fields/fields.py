@@ -1,12 +1,12 @@
 import os
 import ast
+import six
 import binascii
 
 import django
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import six
 from django.utils.encoding import force_text
 from django.utils.functional import cached_property
 
